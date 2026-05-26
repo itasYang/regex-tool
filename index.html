@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>正则表达式测试器</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- ============ 顶部栏 ============ -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">/<span class="logo-accent">.*</span>/</span>
+      <span class="title">正则表达式测试器</span>
+      <span class="version">v0.2 · Phase 2</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="engine-switch" title="正则引擎（Phase 7 启用）">
+        <label class="seg">
+          <input type="radio" name="engine" value="native" checked disabled />
+          <span>JS 原生</span>
+        </label>
+        <label class="seg">
+          <input type="radio" name="engine" value="xregexp" disabled />
+          <span>XRegExp</span>
+        </label>
+      </div>
+      <button id="theme-toggle" class="icon-btn" title="切换主题">
+        <span class="theme-icon-light">☀</span>
+        <span class="theme-icon-dark">☾</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ 正则输入条 ============ -->
+  <section class="regex-bar">
+    <div class="regex-input-wrap">
+      <span class="delim">/</span>
+      <input
+        id="regex-pattern"
+        type="text"
+        class="regex-input"
+        placeholder="在这里写正则表达式…"
+        spellcheck="false"
+        autocomplete="off"
+      />
+      <span class="delim">/</span>
+      <input
+        id="regex-flags"
+        type="text"
+        class="flags-input"
+        placeholder="标志"
+        value="g"
+        spellcheck="false"
+        autocomplete="off"
+      />
+    </div>
+    <div class="flag-toggles" aria-label="标志位快捷开关">
+      <button class="flag-btn" data-flag="g" title="全局匹配">g</button>
+      <button class="flag-btn" data-flag="i" title="忽略大小写">i</button>
+      <button class="flag-btn" data-flag="m" title="多行模式（^ $ 匹配每行）">m</button>
+      <button class="flag-btn" data-flag="s" title=". 匹配换行符">s</button>
+      <button class="flag-btn" data-flag="u" title="Unicode 模式">u</button>
+      <button class="flag-btn" data-flag="y" title="粘性匹配">y</button>
+      <button class="flag-btn" data-flag="d" title="带索引的捕获">d</button>
+    </div>
+    <div class="regex-status" id="regex-status">
+      <span class="status-dot status-idle"></span>
+      <span class="status-text">等待输入正则</span>
+    </div>
+  </section>
+
+  <!-- ============ 模式标签页 ============ -->
+  <nav class="mode-tabs" id="mode-tabs">
+    <button class="tab active" data-mode="single">单句</button>
+    <button class="tab" data-mode="multiline">多行</button>
+    <button class="tab" data-mode="files">文件名</button>
+    <button class="tab" data-mode="replace">替换</button>
+    <button class="tab" data-mode="split">分割</button>
+    <button class="tab" data-mode="capture">捕获组</button>
+    <button class="tab" data-mode="compare">批量对比</button>
+    <button class="tab" data-mode="unittest">单元测试</button>
+    <button class="tab" data-mode="grep">grep 过滤</button>
+    <button class="tab" data-mode="explainer">解释器</button>
+  </nav>
+
+  <!-- ============ 主区域：模式面板 + 侧边栏 ============ -->
+  <main class="layout">
+    <section class="mode-panel" id="mode-panel">
+      <!-- 每个模式的面板由对应的 mode JS 注入这里 -->
+      <div class="placeholder" id="placeholder">
+        <h2>正则表达式测试器</h2>
+        <p>这是 <strong>Phase 1</strong> 的骨架版本。所有 10 个模式的标签页已经就位，但功能将在后续阶段陆续接入。</p>
+        <p>请你看看以下几点是否符合预期：</p>
+        <ul>
+          <li>顶栏布局（标题、引擎切换占位、主题切换按钮）</li>
+          <li>正则输入条（输入框、标志位按钮、状态指示）</li>
+          <li>10 个模式标签页（可以点击切换高亮状态）</li>
+          <li>侧边栏占位（速查表 / 常用库 / 历史，将在 Phase 8 启用）</li>
+          <li>暗/浅主题切换 — 点击右上角的 ☀/☾ 试试看</li>
+        </ul>
+        <p class="placeholder-tip">下一步（Phase 2）会接入正则引擎和「单句测试」模式。</p>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="sidebar-tabs">
+        <button class="side-tab active" data-side="cheatsheet">速查表</button>
+        <button class="side-tab" data-side="presets">常用库</button>
+        <button class="side-tab" data-side="history">历史</button>
+      </div>
+      <div class="sidebar-content">
+        <div class="side-placeholder">
+          <p>侧边栏将在 <strong>Phase 8</strong> 启用：</p>
+          <ul>
+            <li><b>速查表</b> — 元字符、量词、断言、标志的语法速查</li>
+            <li><b>常用库</b> — 邮箱、手机、URL、IP、日期、身份证等</li>
+            <li><b>历史</b> — 用过的正则自动保存到本地</li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ============ 底部状态栏 ============ -->
+  <footer class="statusbar">
+    <span id="stat-matches">匹配数：—</span>
+    <span class="sep">·</span>
+    <span id="stat-time">耗时：—</span>
+    <span class="sep">·</span>
+    <span id="stat-engine">引擎：JS 原生</span>
+    <span class="spacer"></span>
+    <span class="hint">Ctrl/Cmd + Enter 重跑　Ctrl/Cmd + K 聚焦正则</span>
+  </footer>
+
+  <!-- ============ 脚本加载 ============ -->
+  <!-- 数据 -->
+  <script src="data/presets.js"></script>
+  <script src="data/cheatsheet.js"></script>
+  <script src="data/samples.js"></script>
+
+  <!-- 核心 -->
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/engine.js"></script>
+  <script src="assets/js/highlight.js"></script>
+  <script src="assets/js/export.js"></script>
+
+  <!-- 模式（按字母顺序加载，注册到全局 Modes 对象） -->
+  <script src="assets/js/modes/single.js"></script>
+  <script src="assets/js/modes/multiline.js"></script>
+  <script src="assets/js/modes/files.js"></script>
+  <script src="assets/js/modes/replace.js"></script>
+  <script src="assets/js/modes/split.js"></script>
+  <script src="assets/js/modes/capture.js"></script>
+  <script src="assets/js/modes/compare.js"></script>
+  <script src="assets/js/modes/unittest.js"></script>
+  <script src="assets/js/modes/grep.js"></script>
+  <script src="assets/js/modes/explainer.js"></script>
+
+  <!-- 主应用 -->
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
