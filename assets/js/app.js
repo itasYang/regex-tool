@@ -58,11 +58,65 @@
       this.bindSidebarTabs();
       this.bindRegexInputs();
       this.bindFlagButtons();
+      this.bindLangToggle();
       this.bindShortcuts();
+      this.applyLang(false);                  // 翻译静态 DOM + 顶栏/状态栏（模式尚未挂载）
       this.syncFlagButtons();
       this.recompile();                       // 用恢复/空的正则跑一次初始编译
       this.renderModePanel(this.state.mode);  // 挂载当前模式（默认 single）
-      console.info('[regex-tester] Phase 2 已就绪');
+      console.info('[regex-tester] Phase 4 已就绪');
+    },
+
+    /* ---------- i18n ---------- */
+    bindLangToggle() {
+      const btn = document.getElementById('lang-toggle');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        window.I18n.setLang(window.I18n.lang === 'en' ? 'zh' : 'en');
+        this.applyLang(true);
+      });
+    },
+
+    // 翻译所有带 data-i18n* 的静态元素
+    applyI18nDom(root) {
+      const I18n = window.I18n;
+      (root || document).querySelectorAll('[data-i18n]').forEach(el => {
+        el.textContent = I18n.t(el.getAttribute('data-i18n'));
+      });
+      (root || document).querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        el.setAttribute('placeholder', I18n.t(el.getAttribute('data-i18n-placeholder')));
+      });
+      (root || document).querySelectorAll('[data-i18n-title]').forEach(el => {
+        el.setAttribute('title', I18n.t(el.getAttribute('data-i18n-title')));
+      });
+    },
+
+    updateChrome() {
+      const I18n = window.I18n;
+      document.title = I18n.t('app.title');
+      document.documentElement.setAttribute('lang', I18n.lang === 'zh' ? 'zh-CN' : 'en');
+      const langBtn = document.getElementById('lang-toggle');
+      if (langBtn) langBtn.textContent = I18n.t('lang.label');
+      const eng = document.getElementById('stat-engine');
+      if (eng) eng.textContent = I18n.t('stat.engine') + I18n.t('engine.native');
+    },
+
+    // 根据当前状态刷新正则状态指示器的文案
+    refreshRegexStatus() {
+      const I18n = window.I18n;
+      if (this.state.regexError) this.setRegexStatus('error', this.state.regexError);
+      else if (!this.state.pattern) this.setRegexStatus('idle', I18n.t('status.waiting'));
+      else this.setRegexStatus('ok', I18n.t('status.valid'));
+    },
+
+    applyLang(reMount) {
+      this.applyI18nDom(document);
+      this.updateChrome();
+      this.refreshRegexStatus();
+      // 重置匹配统计标签（具体数值由模式 run 时刷新）
+      this.setStats(this.state._lastCount != null ? this.state._lastCount : 0,
+                    this.state._lastElapsed != null ? this.state._lastElapsed : null);
+      if (reMount) this.renderModePanel(this.state.mode);
     },
 
     /* ---------- 持久化 ---------- */
@@ -140,29 +194,17 @@
       }
 
       // 否则显示通用占位
-      const labels = {
-        single: '单句测试',
-        multiline: '多行文本测试',
-        files: '多文件名测试',
-        replace: '替换模式',
-        split: '分割模式',
-        capture: '捕获组提取',
-        compare: '批量正则对比',
-        unittest: '单元测试（TDD）',
-        grep: 'grep 日志过滤',
-        explainer: '可视化解释器',
-      };
+      const I18n = window.I18n;
       const phases = {
-        multiline: 'Phase 3', files: 'Phase 3',
-        replace: 'Phase 4', split: 'Phase 4',
         capture: 'Phase 5', compare: 'Phase 5',
         unittest: 'Phase 6', grep: 'Phase 6', explainer: 'Phase 6',
       };
+      const header = I18n.t('tab.' + mode);
       panel.innerHTML =
         '<div class="placeholder">' +
-        '  <h2>' + (labels[mode] || mode) + '</h2>' +
-        '  <p>该模式将在 <strong>' + (phases[mode] || '后续阶段') + '</strong> 启用。</p>' +
-        '  <p class="placeholder-tip">当前为 Phase 2，已接入正则引擎与「单句测试」模式，其余模式会在后续阶段逐个接入。</p>' +
+        '  <h2>' + Highlight.escape(header) + '</h2>' +
+        '  <p>' + Highlight.escape(I18n.t('placeholder.willEnable', { phase: phases[mode] || '—' })) + '</p>' +
+        '  <p class="placeholder-tip">' + Highlight.escape(I18n.t('placeholder.tip')) + '</p>' +
         '</div>';
     },
 
@@ -214,7 +256,7 @@
         this.state.regex = null;
         this.state.regexError = null;
         if (wrap) wrap.classList.remove('has-error');
-        this.setRegexStatus('idle', '等待输入正则');
+        this.setRegexStatus('idle', window.I18n.t('status.waiting'));
         this.events.emit('regex:change', null, pattern, flags);
         return;
       }
@@ -224,7 +266,7 @@
         this.state.regex = res.regex;
         this.state.regexError = null;
         if (wrap) wrap.classList.remove('has-error');
-        this.setRegexStatus('ok', '正则有效');
+        this.setRegexStatus('ok', window.I18n.t('status.valid'));
         this.events.emit('regex:change', res.regex, pattern, flags);
       } else {
         this.state.regex = null;
@@ -244,18 +286,21 @@
     },
 
     setStats(count, elapsed) {
+      const I18n = window.I18n;
+      this.state._lastCount = count;
+      this.state._lastElapsed = elapsed;
       const m = document.getElementById('stat-matches');
       const t = document.getElementById('stat-time');
-      if (m) m.textContent = '匹配数：' + (count == null ? '—' : count);
+      if (m) m.textContent = I18n.t('stat.matches') + (count == null ? I18n.t('stat.dash') : count);
       if (t) {
         if (elapsed == null) {
-          t.textContent = '耗时：—';
+          t.textContent = I18n.t('stat.time') + I18n.t('stat.dash');
         } else {
           let v;
           if (elapsed < 1) v = elapsed.toFixed(2);
           else if (elapsed < 10) v = elapsed.toFixed(1);
           else v = Math.round(elapsed);
-          t.textContent = '耗时：' + v + ' ms';
+          t.textContent = I18n.t('stat.time') + v + I18n.t('stat.ms');
         }
       }
     },

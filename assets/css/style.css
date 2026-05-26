@@ -788,6 +788,92 @@ input {
   font-style: italic;
 }
 
+/* ---------- 8f. 语言切换按钮 ---------- */
+.lang-btn {
+  width: auto;
+  min-width: 32px;
+  padding: 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ---------- 8g. 替换模式：三栏 ---------- */
+.rp-repl { width: 100%; }
+
+.rp-modes {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.rp-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.rp-mode input { cursor: pointer; }
+
+.rp-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.rp-col { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+.rp-col-head {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.rp-box { min-height: 100px; }
+
+/* ---------- 8h. 分割模式：分段卡片 ---------- */
+.sp-result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 6px;
+  padding: 12px;
+}
+
+.sp-seg {
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.sp-sep {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.sp-empty { color: var(--text-faint); font-style: italic; }
+
+@media (max-width: 760px) {
+  .rp-cols { grid-template-columns: 1fr; }
+}
+
 /* ---------- 9. 底部状态栏 ---------- */
 .statusbar {
   display: flex;
