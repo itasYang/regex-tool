@@ -26,7 +26,7 @@
 | 历史存储 | localStorage | 单 HTML 文件 + 本地存储不会丢 |
 | 性能保护 | 必须有超时熔断 | 防止灾难性回溯挂死浏览器 |
 | 主题 | 浅色 + 暗色，CSS 变量切换 | 已实现 |
-| UI 语言 | 中文（简体） | 用户母语 |
+| UI 语言 | **英文默认 + 中文可切换**（i18n 双语，见 `assets/js/i18n.js`） | Phase 4 用户要求：项目英文化，网页右上角可一键切回中文，`rt:lang` 记忆选择 |
 | License | MIT，署名 `itasYang`，Copyright 2026 | 已确认 |
 
 ---
@@ -41,9 +41,10 @@
 5. **超时熔断**：所有正则执行要包在 `Engine.execWithTimeout(...)` 里（Phase 2 实现），默认 1000ms。
 6. **零外部依赖**：除了 Phase 7 引入 XRegExp（从 CDN 加载），其它不要新增依赖。
 7. **不引入任何构建工具**：不加 webpack/vite/rollup/typescript 编译。保持双击 `index.html` 就能跑。
+8. **UI 文案走 i18n**（Phase 4 起）：所有用户可见文字不要硬编码。静态 DOM 用 `data-i18n` / `data-i18n-placeholder` / `data-i18n-title` 标注；动态内容用 `window.I18n.t(key, vars)`（支持 `{var}` 插值、英文单复数用 `I18n.matches(n)`）。**新增任何文案都必须同时在 `i18n.js` 的 `en` 和 `zh` 两套字典里加 key**。默认英文，切换时 `app.js` 的 `applyLang()` 会刷新顶栏并重挂当前模式。
 
 ### 3.2 命名约定
-- localStorage key 前缀：`rt:`（如 `rt:theme`, `rt:history`）
+- localStorage key 前缀：`rt:`（如 `rt:theme`, `rt:lang`, `rt:history`）
 - CSS class 高亮捕获组：`hl-g0` 到 `hl-g5`（已在 style.css 里定义）
 - 模式 ID：英文短词（`single`, `multiline`, `files`, `replace`, `split`, `capture`, `compare`, `unittest`, `grep`, `explainer`）
 - 模式注册：每个模式 JS 文件向 `window.Modes` 注册一个对象
@@ -87,6 +88,7 @@ regex-tester/
 │   ├── css/style.css       # 主题变量 + 全部样式（单文件）
 │   └── js/
 │       ├── app.js          # 主入口，挂载到 window.App
+│       ├── i18n.js         # 国际化（英文默认 + 中文），挂到 window.I18n（Phase 4）
 │       ├── engine.js       # 引擎封装，挂到 window.Engine
 │       ├── highlight.js    # 高亮渲染，挂到 window.Highlight
 │       ├── storage.js      # localStorage 封装，挂到 window.Storage（已可用）
@@ -115,11 +117,12 @@ regex-tester/
 ```
 1. data/*.js       （纯数据，先于一切）
 2. storage.js      （无依赖）
-3. engine.js       （无依赖）
-4. highlight.js    （无依赖）
-5. export.js       （无依赖）
-6. modes/*.js      （可能依赖 Engine、Highlight）
-7. app.js          （最后，依赖所有 Modes 已注册）
+3. i18n.js         （依赖 Storage 做持久化；modes/app 依赖它取译文）
+4. engine.js       （无依赖）
+5. highlight.js    （无依赖）
+6. export.js       （无依赖）
+7. modes/*.js      （可能依赖 Engine、Highlight、I18n）
+8. app.js          （最后，依赖所有 Modes 已注册）
 ```
 
 ### 5.2 模式模块的标准接口
@@ -202,37 +205,51 @@ App.events = {
 
 ---
 
-## 6. 当前状态（Phase 1 完成时）
+## 6. 当前状态（Phase 4 完成时）
+
+> 进度：Phase 1–4 已完成。下一步是 Phase 5（捕获组 + 批量对比）。顶栏版本号 `v0.4 · Phase 4`。
 
 ### 6.1 已实现 ✅
 - 完整 HTML 骨架（顶栏、正则条、10 模式标签、侧边栏、底部状态栏）
-- 浅色/暗色主题切换（localStorage 持久化，✓ 已测）
-- 10 个模式标签页切换（点击切换 active 状态 + 显示占位提示）
-- 侧边栏 tab 切换（3 个 tab：速查表/常用库/历史）
-- 标志位按钮（g i m s u y d）—— 点击切换 active 和标志输入框，**但还没有连到引擎**
-- 键盘快捷键骨架（`Ctrl/Cmd+K` 聚焦正则框，已绑定但因输入框 disabled 而无效果）
+- 浅色/暗色主题切换（localStorage 持久化）
+- **i18n 双语**：英文默认 + 中文一键切换（`window.I18n`，`rt:lang` 记忆；静态 DOM 用 `data-i18n*`，动态用 `I18n.t()`）
+- **核心引擎**（`engine.js`）：`compile()` + `execWithTimeout()`（inline Worker 超时熔断，默认 1000ms，Worker 不可用时同步退化）
+- **高亮**（`highlight.js`）：`escape()` + `render(text, ranges)` 真实高亮，支持零宽匹配标记
+- **事件总线** `App.events`（on/off/emit）；`App.state` 含 `pattern/flags/regex/regexError`
+- 正则输入实时编译（防抖 200ms）、错误红边/红点、标志按钮与标志框双向同步
+- 快捷键 `Ctrl/Cmd+K` 聚焦、`Ctrl/Cmd+Enter` 重跑
+- 已实装模式：
+  - `single` 单句（Phase 2）
+  - `multiline` 多行带行号 + 点击行号跳转（Phase 3）
+  - `files` 文件名，5 种来源 + 命中/未命中两栏（Phase 3）
+  - `replace` 替换，三栏对比 + 全部/逐个（Phase 4）
+  - `split` 分割，分段卡片（Phase 4）
+- `data/samples.js` 已填充 6 套示例集
 - Storage 模块完整可用（get/set/remove，含可用性检测）
 
 ### 6.2 未实现（占位状态） ❌
-- 正则输入框是 `disabled` 的
-- Engine 是占位实现（没有超时熔断）
-- Highlight 只有 escape，没有真正的高亮渲染
-- 所有 10 个模式都只有空 `{ name, phase }` 注册，没有 `mount()`
-- Exporter 是空对象
-- presets / cheatsheet / samples 都是空数组
-- 引擎切换按钮 disabled，没有功能
+- 模式 `capture` / `compare`（Phase 5）、`unittest` / `grep` / `explainer`（Phase 6）仍是空 `{ name, phase }` 注册，没有 `mount()`
+- Exporter（`export.js`）是空对象（Phase 9）
+- `presets` / `cheatsheet` 仍是空数组（Phase 8）
+- 引擎切换按钮 disabled，没有功能（Phase 7 接 XRegExp）
+- 侧边栏内容（速查表/常用库/历史）仍是占位（Phase 8）
 
 ### 6.3 关键接口已就绪
-- `window.App.state` - 全局状态
-- `window.App.renderModePanel(mode)` - 切换模式时自动调用，会优先调用 `Modes[mode].mount(panel)`
-- `window.Storage` - 完全可用
-- 主题切换、模式切换、侧边栏切换的事件绑定已完成
+- `window.App.state` - 全局状态（含 `regex/pattern/flags/regexError`）
+- `window.App.events` - 事件总线（`regex:change` / `mode:change` / `theme:change`）
+- `window.App.renderModePanel(mode)` - 切模式时调用，先 `unmount()` 旧模式再 `mount()` 新模式
+- `window.App.setStats(count, elapsed)` / `setRegexStatus(type, text)` - 状态栏与指示器
+- `window.App.applyLang(reMount)` - 应用语言（刷新静态 DOM + 顶栏，可选重挂模式）
+- `window.I18n.t(key, vars)` / `I18n.matches(n)` / `I18n.setLang(lang)`
+- `window.Engine` / `window.Highlight` / `window.Storage` - 完全可用
 
 ---
 
-## 7. 剩余 9 个阶段的详细验收标准
+## 7. 各阶段的详细验收标准
 
-### Phase 2 — 核心引擎 + 单句测试 🔥（下一步）
+> 进度标记：Phase 2 / 3 / 4 已完成 ✅；下一步是 Phase 5。下面的验收清单保留作为各阶段的规格说明与回归参考。
+
+### Phase 2 — 核心引擎 + 单句测试 ✅（已完成）
 
 **改动范围：** `engine.js`, `highlight.js`, `app.js`, `modes/single.js`, `index.html`（解除 input disabled）
 
@@ -263,7 +280,7 @@ App.events = {
 
 ---
 
-### Phase 3 — 多行文本 + 文件名
+### Phase 3 — 多行文本 + 文件名 ✅（已完成）
 
 **改动范围：** `modes/multiline.js`, `modes/files.js`, `data/samples.js`
 
@@ -303,7 +320,11 @@ window.FileSamples = [
 
 ---
 
-### Phase 4 — 替换 + 分割
+### Phase 4 — 替换 + 分割 ✅（已完成，含 i18n 附加任务）
+
+> **附加任务（已随 Phase 4 交付）：i18n 国际化。** 新增 `assets/js/i18n.js`，
+> 网页默认英文、右上角可一键切换中文（`rt:lang` 记忆）。README 已英文化。
+> 详见 §3.1 第 8 条的 i18n 规范。
 
 **Phase 4a · 替换：**
 - [ ] 输入区两个 textarea：「原文」+「替换为」
@@ -318,7 +339,7 @@ window.FileSamples = [
 
 ---
 
-### Phase 5 — 捕获组 + 批量对比
+### Phase 5 — 捕获组 + 批量对比 🔥（下一步）
 
 **Phase 5a · 捕获组：**
 - [ ] 复用单句/多行模式的输入，但渲染更精细：每个捕获组用不同的 `hl-g0`~`hl-g5` 类高亮
@@ -448,7 +469,11 @@ window.FileSamples = [
 
 - **不要一次性做完所有功能** —— 按 Phase 分阶段交付，每个 Phase 做完停下来给用户看效果
 - **GitHub repo 描述定为**：「零构建的浏览器端正则测试器，支持 10 种测试模式（单句/多行/文件名/替换/捕获等），JS 原生 + XRegExp 双引擎，命中部分彩色高亮。」
-- **回复用中文**
+- **回复用中文** —— 指**助手与用户对话**用中文；注意这与「网页 UI 默认英文」是两回事（见 §2，UI 走 i18n 双语）
+- **Git 提交**（Phase 4 起）：
+  - 仓库远程：`https://github.com/itasYang/regex-tool.git`，作者署名 `itasYang`
+  - 提交信息用 conventional 风格前缀（如 `feat:` / `feature:` / `core:` / `docs:` / `fix:`）
+  - **不要**在提交信息里带 `Co-Authored-By: Claude …` 署名 —— 用户要求以本人身份提交
 
 ---
 
@@ -462,7 +487,7 @@ window.FileSamples = [
    - `assets/js/app.js`（已实装的部分，看 IIFE 和事件绑定的风格）
    - `assets/css/style.css`（主题变量怎么定义的）
    - 任意一个 `modes/*.js`（看现有占位结构）
-3. **第三步**：开始 Phase 2，按本文件 §7 的 Phase 2 验收清单一条条做
+3. **第三步**：从下一个未完成阶段开始（当前是 **Phase 5**），按本文件 §7 对应阶段的验收清单一条条做
 4. **第四步**：每完成一个 Phase，更新 README 的进度勾选 + 改顶栏版本号 + 让用户测试一轮
 5. **不要跳阶段**。每阶段都是后续阶段的地基。
 
