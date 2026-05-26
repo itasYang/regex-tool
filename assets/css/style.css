@@ -592,6 +592,202 @@ input {
 .result-error { color: var(--danger); }
 .result-warn { color: var(--warning); }
 
+/* ---------- 8d. 多行模式：行号视图 ---------- */
+.ml-input { min-height: 160px; }
+
+.ml-result {
+  padding: 0;
+  max-height: 460px;
+  overflow: auto;
+  white-space: normal;
+}
+
+.ml-line {
+  display: flex;
+  align-items: flex-start;
+  font-family: var(--font-mono);
+  line-height: 1.7;
+}
+
+.ml-line.is-hit {
+  background: var(--accent-soft);
+}
+
+.ml-ln {
+  flex: 0 0 auto;
+  min-width: 3.5em;
+  padding: 0 10px;
+  text-align: right;
+  color: var(--text-faint);
+  background: var(--bg-hover);
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  white-space: pre;
+}
+
+.ml-ln:hover {
+  color: var(--accent);
+  background: var(--bg-active);
+}
+
+.ml-code {
+  flex: 1 1 auto;
+  padding: 0 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-width: 0;
+}
+
+/* ---------- 8e. 文件名模式 ---------- */
+.fm-sources {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.fm-srctabs {
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--bg-hover);
+  border-bottom: 1px solid var(--border);
+}
+
+.fm-srctab {
+  padding: 9px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.12s ease;
+}
+
+.fm-srctab:hover { color: var(--text); background: var(--bg-active); }
+.fm-srctab.active {
+  color: var(--accent);
+  background: var(--bg-elevated);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.fm-srcpanel { display: none; padding: 14px; }
+.fm-srcpanel.is-active { display: block; }
+.fm-srcpanel .test-input { min-height: 110px; }
+
+.fm-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.fm-srcnote {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.fm-select,
+.fm-input {
+  padding: 8px 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.fm-input { flex: 1; min-width: 220px; }
+.fm-select { width: 100%; cursor: pointer; }
+
+.fm-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--accent);
+  border-radius: var(--radius);
+  transition: background-color 0.12s ease;
+  display: inline-block;
+}
+.fm-btn:hover { background: var(--accent-hover); }
+
+.fm-drop {
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.fm-drop p { margin: 4px 0; }
+.fm-drop.is-over {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* 统计 + 两栏结果 */
+.fm-stats {
+  margin: 14px 0 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.fm-stats b { color: var(--text); }
+.fm-stat-hit { color: var(--success) !important; }
+.fm-stat-miss { color: var(--text-faint) !important; }
+
+.fm-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fm-col {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+}
+
+.fm-col-head {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--bg-hover);
+  border-bottom: 1px solid var(--border);
+}
+.fm-head-hit { color: var(--success); }
+.fm-head-miss { color: var(--text-muted); }
+
+.fm-list {
+  max-height: 360px;
+  overflow: auto;
+  background: var(--bg-elevated);
+}
+
+.fm-item {
+  padding: 5px 12px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  border-bottom: 1px solid var(--border);
+  word-break: break-all;
+}
+.fm-item:last-child { border-bottom: none; }
+
+.fm-more,
+.fm-empty {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
 /* ---------- 9. 底部状态栏 ---------- */
 .statusbar {
   display: flex;

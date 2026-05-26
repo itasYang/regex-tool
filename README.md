@@ -1,7 +1,7 @@
 # 正则表达式测试器 (Regex Tester)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Phase](https://img.shields.io/badge/Phase-2%2F10-blue.svg)](CLAUDE.md)
+[![Phase](https://img.shields.io/badge/Phase-3%2F10-blue.svg)](CLAUDE.md)
 [![No Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
 
 一个纯前端、零构建、单页面的正则表达式测试工具。打开 `index.html` 即可使用。
@@ -55,7 +55,7 @@ regex-tester/
 
 - [x] **Phase 1** — repo 骨架 + 主题样式 + 模式标签页占位
 - [x] **Phase 2** — 核心引擎（编译 + 超时熔断）+ 模式 1（单句测试）
-- [ ] **Phase 3** — 模式 2（多行）+ 模式 3（文件名）
+- [x] **Phase 3** — 模式 2（多行带行号）+ 模式 3（文件名，5 种来源 + 命中/未命中两栏）
 - [ ] **Phase 4** — 模式 4（替换）+ 模式 5（分割）
 - [ ] **Phase 5** — 模式 6（捕获组）+ 模式 7（批量对比）
 - [ ] **Phase 6** — 模式 8（TDD）+ 模式 9（grep）+ 模式 10（解释器）
