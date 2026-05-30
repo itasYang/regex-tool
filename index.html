@@ -12,16 +12,16 @@
     <div class="brand">
       <span class="logo">/<span class="logo-accent">.*</span>/</span>
       <span class="title" data-i18n="app.title">Regex Tester</span>
-      <span class="version">v0.6 · Phase 6</span>
+      <span class="version">v0.7 · Phase 7</span>
     </div>
     <div class="topbar-actions">
-      <div class="engine-switch" data-i18n-title="engine.title" title="Regex engine (enabled in Phase 7)">
+      <div class="engine-switch" id="engine-switch" data-i18n-title="engine.title" title="Switch regex engine">
         <label class="seg">
-          <input type="radio" name="engine" value="native" checked disabled />
+          <input type="radio" name="engine" value="native" checked />
           <span data-i18n="engine.native">JS native</span>
         </label>
         <label class="seg">
-          <input type="radio" name="engine" value="xregexp" disabled />
+          <input type="radio" name="engine" value="xregexp" />
           <span data-i18n="engine.xregexp">XRegExp</span>
         </label>
       </div>
@@ -128,6 +128,10 @@
   </footer>
 
   <!-- ============ 脚本加载 ============ -->
+  <!-- 可选第三方：XRegExp（PCRE-ish）。从 cdnjs 加载；离线 / file:// 下无网络时会
+       静默失败，引擎切换会自动回退到 JS 原生并提示。 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xregexp/5.1.1/xregexp-all.min.js" crossorigin="anonymous"></script>
+
   <!-- 数据 -->
   <script src="data/presets.js"></script>
   <script src="data/cheatsheet.js"></script>

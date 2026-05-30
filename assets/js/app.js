@@ -59,12 +59,14 @@
       this.bindRegexInputs();
       this.bindFlagButtons();
       this.bindLangToggle();
+      this.bindEngineSwitch();
       this.bindShortcuts();
       this.applyLang(false);                  // 翻译静态 DOM + 顶栏/状态栏（模式尚未挂载）
       this.syncFlagButtons();
+      this.syncEngineSwitch();
       this.recompile();                       // 用恢复/空的正则跑一次初始编译
       this.renderModePanel(this.state.mode);  // 挂载当前模式（默认 single）
-      console.info('[regex-tester] Phase 6 已就绪');
+      console.info('[regex-tester] Phase 7 已就绪');
     },
 
     /* ---------- i18n ---------- */
@@ -97,8 +99,15 @@
       document.documentElement.setAttribute('lang', I18n.lang === 'zh' ? 'zh-CN' : 'en');
       const langBtn = document.getElementById('lang-toggle');
       if (langBtn) langBtn.textContent = I18n.t('lang.label');
+      this.refreshEngineLabel();
+    },
+
+    refreshEngineLabel() {
+      const I18n = window.I18n;
       const eng = document.getElementById('stat-engine');
-      if (eng) eng.textContent = I18n.t('stat.engine') + I18n.t('engine.native');
+      if (!eng) return;
+      const key = (this.state.engine === 'xregexp') ? 'engine.xregexp' : 'engine.native';
+      eng.textContent = I18n.t('stat.engine') + I18n.t(key);
     },
 
     // 根据当前状态刷新正则状态指示器的文案
@@ -142,6 +151,62 @@
       }
       this.state.pattern = pin ? pin.value : '';
       this.state.flags = fin ? fin.value : 'g';
+
+      // 引擎选择
+      let savedEng = window.Storage ? Storage.get('engine', 'native') : 'native';
+      if (savedEng !== 'native' && savedEng !== 'xregexp') savedEng = 'native';
+      // 若 XRegExp 没加载成功，强行降级到 native
+      if (savedEng === 'xregexp' && !Engine.isXRegExpAvailable()) savedEng = 'native';
+      Engine.setEngine(savedEng);
+      this.state.engine = Engine.type;
+    },
+
+    /* ---------- 引擎切换 ---------- */
+    bindEngineSwitch() {
+      const wrap = document.getElementById('engine-switch');
+      if (!wrap) return;
+      wrap.querySelectorAll('input[name="engine"]').forEach(input => {
+        input.addEventListener('change', () => {
+          if (!input.checked) return;
+          const wanted = input.value;
+          const ok = Engine.setEngine(wanted);
+          if (!ok) {
+            // 回退：把 UI radio 恢复到当前实际引擎
+            this.syncEngineSwitch();
+            this.setRegexStatus('warn', window.I18n.t('engine.unavailable'));
+            return;
+          }
+          this.state.engine = Engine.type;
+          if (window.Storage) Storage.set('engine', Engine.type);
+          this.refreshEngineLabel();
+          this.recompile(); // 引擎变了重编译会 emit regex:change，模式自动重跑
+          this.events.emit('engine:change', Engine.type);
+        });
+      });
+    },
+
+    syncEngineSwitch() {
+      const wrap = document.getElementById('engine-switch');
+      if (!wrap) return;
+      wrap.querySelectorAll('input[name="engine"]').forEach(input => {
+        input.checked = (input.value === this.state.engine);
+        // XRegExp 不可用时禁用对应选项
+        if (input.value === 'xregexp' && !Engine.isXRegExpAvailable()) {
+          input.disabled = true;
+          const seg = input.closest('.seg');
+          if (seg) seg.classList.add('seg-disabled');
+        } else {
+          input.disabled = false;
+          const seg = input.closest('.seg');
+          if (seg) seg.classList.remove('seg-disabled');
+        }
+      });
+      // 当 XRegExp 不可用时，给整个 switch 一个 title 提示
+      if (!Engine.isXRegExpAvailable()) {
+        wrap.setAttribute('title', window.I18n.t('engine.unavailable'));
+      } else {
+        wrap.setAttribute('title', window.I18n.t('engine.title'));
+      }
     },
 
     /* ---------- 主题切换 ---------- */

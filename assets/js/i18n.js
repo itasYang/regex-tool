@@ -36,9 +36,10 @@
       'flag.y': 'Sticky match',
       'flag.d': 'Indices for captures',
 
-      'engine.title': 'Regex engine (enabled in Phase 7)',
+      'engine.title': 'Regex engine',
       'engine.native': 'JS native',
       'engine.xregexp': 'XRegExp',
+      'engine.unavailable': 'XRegExp not loaded (offline or CDN blocked) — staying on native',
       'theme.toggle': 'Toggle theme',
       'lang.toggle': 'Switch to Chinese',
       'lang.label': '中文',
@@ -290,9 +291,10 @@
       'flag.y': '粘性匹配',
       'flag.d': '带索引的捕获',
 
-      'engine.title': '正则引擎（Phase 7 启用）',
+      'engine.title': '正则引擎',
       'engine.native': 'JS 原生',
       'engine.xregexp': 'XRegExp',
+      'engine.unavailable': 'XRegExp 未加载（离线或 CDN 被拦截），保持原生引擎',
       'theme.toggle': '切换主题',
       'lang.toggle': '切换到英文',
       'lang.label': 'EN',

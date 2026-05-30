@@ -136,14 +136,33 @@
     };
   }
 
+  function hasXRegExp() {
+    return typeof window !== 'undefined' && typeof window.XRegExp === 'function';
+  }
+
   const Engine = {
     type: 'native', // 'native' | 'xregexp'
+
+    /** XRegExp 是否可用（CDN 加载成功） */
+    isXRegExpAvailable() { return hasXRegExp(); },
 
     /**
      * 编译正则
      * @returns {{ok:boolean, regex?:RegExp, error?:string}}
+     * XRegExp 路径：先用 XRegExp 编译以校验 + 展开扩展语法（命名捕获、Unicode 属性等），
+     * 再把展开后的 .source / .flags 交给原生 RegExp。这样 Worker 里的原生执行也能正常跑。
+     * XRegExp 不可用时静默降级到原生。
      */
     compile(pattern, flags) {
+      if (this.type === 'xregexp' && hasXRegExp()) {
+        try {
+          // XRegExp 返回原生 RegExp（带它扩展过的 .source）
+          const re = window.XRegExp(pattern, flags || '');
+          return { ok: true, regex: re };
+        } catch (e) {
+          return { ok: false, error: e.message };
+        }
+      }
       try {
         return { ok: true, regex: new RegExp(pattern, flags || '') };
       } catch (e) {
@@ -224,9 +243,12 @@
       });
     },
 
-    /** 切换引擎（Phase 7 实装） */
+    /** 切换引擎。返回 true 表示切换成功，false 表示目标不可用（仍保留原值）。 */
     setEngine(type) {
+      if (type !== 'native' && type !== 'xregexp') return false;
+      if (type === 'xregexp' && !hasXRegExp()) return false;
       this.type = type;
+      return true;
     },
   };
 

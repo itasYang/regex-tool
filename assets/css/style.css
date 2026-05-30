@@ -180,7 +180,6 @@ input {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 2px;
-  opacity: 0.55;
 }
 
 .engine-switch .seg {
@@ -189,9 +188,12 @@ input {
   padding: 4px 10px;
   font-size: 12px;
   border-radius: var(--radius-sm);
-  cursor: not-allowed;
+  cursor: pointer;
   user-select: none;
+  transition: color 0.12s ease;
 }
+
+.engine-switch .seg:hover { color: var(--text); }
 
 .engine-switch .seg input {
   display: none;
@@ -200,11 +202,18 @@ input {
 .engine-switch .seg input:checked + span {
   background: var(--bg-elevated);
   box-shadow: var(--shadow);
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .engine-switch .seg span {
   padding: 2px 6px;
   border-radius: var(--radius-sm);
+}
+
+.engine-switch .seg.seg-disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 /* 图标按钮 */
