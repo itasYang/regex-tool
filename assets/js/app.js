@@ -64,7 +64,7 @@
       this.syncFlagButtons();
       this.recompile();                       // 用恢复/空的正则跑一次初始编译
       this.renderModePanel(this.state.mode);  // 挂载当前模式（默认 single）
-      console.info('[regex-tester] Phase 5 已就绪');
+      console.info('[regex-tester] Phase 6 已就绪');
     },
 
     /* ---------- i18n ---------- */
@@ -195,9 +195,8 @@
 
       // 否则显示通用占位
       const I18n = window.I18n;
-      const phases = {
-        unittest: 'Phase 6', grep: 'Phase 6', explainer: 'Phase 6',
-      };
+      // 所有 10 个模式自 Phase 6 起均已实装；本占位分支保留作为安全网。
+      const phases = {};
       const header = I18n.t('tab.' + mode);
       panel.innerHTML =
         '<div class="placeholder">' +

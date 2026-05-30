@@ -205,9 +205,9 @@ App.events = {
 
 ---
 
-## 6. 当前状态（Phase 5 完成时）
+## 6. 当前状态（Phase 6 完成时）
 
-> 进度：Phase 1–5 已完成。下一步是 Phase 6（TDD + grep + 解释器）。顶栏版本号 `v0.5 · Phase 5`。
+> 进度：Phase 1–6 已完成 —— 10 种测试模式全部上线。下一步是 Phase 7（XRegExp 双引擎）。顶栏版本号 `v0.6 · Phase 6`。
 
 ### 6.1 已实现 ✅
 - 完整 HTML 骨架（顶栏、正则条、10 模式标签、侧边栏、底部状态栏）
@@ -218,7 +218,7 @@ App.events = {
 - **事件总线** `App.events`（on/off/emit）；`App.state` 含 `pattern/flags/regex/regexError`
 - 正则输入实时编译（防抖 200ms）、错误红边/红点、标志按钮与标志框双向同步
 - 快捷键 `Ctrl/Cmd+K` 聚焦、`Ctrl/Cmd+Enter` 重跑
-- 已实装模式：
+- 已实装模式（全部 10 种）：
   - `single` 单句（Phase 2）
   - `multiline` 多行带行号 + 点击行号跳转（Phase 3）
   - `files` 文件名，5 种来源 + 命中/未命中两栏（Phase 3）
@@ -226,13 +226,15 @@ App.events = {
   - `split` 分割，分段卡片（Phase 4）
   - `capture` 捕获组分色 + 命名捕获标识 + 全部匹配表格（Phase 5）
   - `compare` 批量对比 2-4 行（独立标志位）+ 命中数/预览/叠加视图（Phase 5）
+  - `unittest` TDD：应匹配/不应匹配两栏 + 实时 ✓✗ + 进度条 + 全绿动画（Phase 6）
+  - `grep` 多行过滤 + grep/grep -v + 行号 + 上下文 -A/-B/-C + 命中高亮（Phase 6）
+  - `explainer` 可视化解释器：手写递归下降解析器把正则拆段并配自然语言描述，左右联动悬停（Phase 6）
 - **引擎扩展（Phase 5）**：`Engine` 序列化匹配时新增 `groupIndices` / `namedIndices`
   字段，当 RegExp 使用 `d` 标志时携带每个捕获组的 `[start, end]`，供 capture 模式按组分色
 - `data/samples.js` 已填充 6 套示例集
 - Storage 模块完整可用（get/set/remove，含可用性检测）
 
 ### 6.2 未实现（占位状态） ❌
-- 模式 `unittest` / `grep` / `explainer`（Phase 6）仍是空 `{ name, phase }` 注册，没有 `mount()`
 - Exporter（`export.js`）是空对象（Phase 9）
 - `presets` / `cheatsheet` 仍是空数组（Phase 8）
 - 引擎切换按钮 disabled，没有功能（Phase 7 接 XRegExp）
@@ -251,7 +253,7 @@ App.events = {
 
 ## 7. 各阶段的详细验收标准
 
-> 进度标记：Phase 2 / 3 / 4 / 5 已完成 ✅；下一步是 Phase 6。下面的验收清单保留作为各阶段的规格说明与回归参考。
+> 进度标记：Phase 2 / 3 / 4 / 5 / 6 已完成 ✅；下一步是 Phase 7（XRegExp 双引擎）。下面的验收清单保留作为各阶段的规格说明与回归参考。
 
 ### Phase 2 — 核心引擎 + 单句测试 ✅（已完成）
 
@@ -357,7 +359,7 @@ window.FileSamples = [
 
 ---
 
-### Phase 6 — TDD + grep + 解释器
+### Phase 6 — TDD + grep + 解释器 ✅（已完成）
 
 **Phase 6a · TDD 单元测试：**
 - [ ] 两个列表：「应匹配」「不应匹配」，每行一个样例，可增删
@@ -491,7 +493,7 @@ window.FileSamples = [
    - `assets/js/app.js`（已实装的部分，看 IIFE 和事件绑定的风格）
    - `assets/css/style.css`（主题变量怎么定义的）
    - 任意一个 `modes/*.js`（看现有占位结构）
-3. **第三步**：从下一个未完成阶段开始（当前是 **Phase 6**），按本文件 §7 对应阶段的验收清单一条条做
+3. **第三步**：从下一个未完成阶段开始（当前是 **Phase 7**），按本文件 §7 对应阶段的验收清单一条条做
 4. **第四步**：每完成一个 Phase，更新 README 的进度勾选 + 改顶栏版本号 + 让用户测试一轮
 5. **不要跳阶段**。每阶段都是后续阶段的地基。
 
