@@ -66,7 +66,8 @@
       this.syncEngineSwitch();
       this.recompile();                       // 用恢复/空的正则跑一次初始编译
       this.renderModePanel(this.state.mode);  // 挂载当前模式（默认 single）
-      console.info('[regex-tester] Phase 7 已就绪');
+      this.renderSidebar();                   // 渲染初始侧边栏
+      console.info('[regex-tester] Phase 8 已就绪');
     },
 
     /* ---------- i18n ---------- */
@@ -126,6 +127,7 @@
       this.setStats(this.state._lastCount != null ? this.state._lastCount : 0,
                     this.state._lastElapsed != null ? this.state._lastElapsed : null);
       if (reMount) this.renderModePanel(this.state.mode);
+      this.renderSidebar();
     },
 
     /* ---------- 持久化 ---------- */
@@ -279,9 +281,15 @@
           tabs.forEach(t => t.classList.remove('active'));
           tab.classList.add('active');
           this.state.sidebar = tab.dataset.side;
-          // Phase 8 会在这里渲染对应内容
+          this.renderSidebar();
         });
       });
+    },
+
+    renderSidebar() {
+      const box = document.querySelector('.sidebar-content');
+      if (!box || !window.Sidebar) return;
+      window.Sidebar.render(box, this.state.sidebar);
     },
 
     /* ---------- 正则 / 标志输入（防抖编译） ---------- */
@@ -331,6 +339,7 @@
         if (wrap) wrap.classList.remove('has-error');
         this.setRegexStatus('ok', window.I18n.t('status.valid'));
         this.events.emit('regex:change', res.regex, pattern, flags);
+        if (window.Sidebar) window.Sidebar.pushHistory(pattern, flags);
       } else {
         this.state.regex = null;
         this.state.regexError = res.error;
