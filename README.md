@@ -1,7 +1,7 @@
 # Regex Tester
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Phase](https://img.shields.io/badge/Phase-4%2F10-blue.svg)](CLAUDE.md)
+[![Phase](https://img.shields.io/badge/Phase-5%2F10-blue.svg)](CLAUDE.md)
 [![No Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
 
 A pure front-end, zero-build, single-page regex testing tool. Just open `index.html` to use it.
@@ -59,7 +59,7 @@ regex-tester/
 - [x] **Phase 2** — core engine (compile + timeout circuit breaker) + Mode 1 (Single)
 - [x] **Phase 3** — Mode 2 (Multiline with line numbers) + Mode 3 (Filenames, 5 sources + hit/miss columns)
 - [x] **Phase 4** — Mode 4 (Replace) + Mode 5 (Split) + i18n (English default, 中文 toggle)
-- [ ] **Phase 5** — Mode 6 (Capture Groups) + Mode 7 (Compare)
+- [x] **Phase 5** — Mode 6 (Capture Groups) + Mode 7 (Compare)
 - [ ] **Phase 6** — Mode 8 (TDD) + Mode 9 (grep) + Mode 10 (Explainer)
 - [ ] **Phase 7** — XRegExp dual-engine switching
 - [ ] **Phase 8** — sidebar (cheatsheet / presets / history)

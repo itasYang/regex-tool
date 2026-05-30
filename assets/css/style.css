@@ -833,6 +833,254 @@ input {
 
 .rp-box { min-height: 100px; }
 
+/* ---------- 8h-cp. 捕获组模式 ---------- */
+.cp-result { min-height: 80px; }
+
+.cp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.cp-chip-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.cp-chip-label { font-weight: 600; color: var(--text); }
+.cp-chip-name {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.cp-table-scroll {
+  max-height: 360px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+}
+
+.cp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.cp-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-hover);
+  color: var(--text-muted);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cp-table tbody td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.cp-table tbody tr:last-child td { border-bottom: none; }
+.cp-table tbody tr:hover { background: var(--bg-hover); }
+
+.cp-th-num,
+.cp-td-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.cp-td-mono { font-family: var(--font-mono); }
+
+.cp-cell-empty,
+.cp-cell-undef {
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.cp-table-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.cp-no-groups {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+.cp-no-groups-body {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ---------- 8h-cmp. 批量对比模式 ---------- */
+.cmp-text { min-height: 110px; }
+
+.cmp-rows-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cmp-add-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.cmp-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cmp-row {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.cmp-row-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-hover);
+  border-bottom: 1px solid var(--border);
+}
+
+.cmp-regex-input {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  min-width: 0;
+}
+
+.cmp-regex-input .delim {
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.cmp-regex-input.has-error {
+  border-color: var(--danger);
+}
+
+.cmp-pattern {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  padding: 2px 0;
+}
+
+.cmp-flags {
+  width: 80px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  outline: none;
+  padding: 2px 0;
+  text-align: right;
+}
+
+.cmp-count {
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 70px;
+  text-align: right;
+}
+
+.cmp-count-ok { color: var(--accent); }
+.cmp-count-error { color: var(--danger); }
+.cmp-count-warn { color: var(--warning); }
+
+.cmp-remove {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--text-faint);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.cmp-remove:hover:not(:disabled) {
+  color: var(--danger);
+  background: var(--bg-active);
+  border-color: var(--border);
+}
+.cmp-remove:disabled { cursor: not-allowed; }
+
+.cmp-preview {
+  min-height: 50px;
+  border: none;
+  border-radius: 0;
+  background: var(--bg-input);
+  max-height: 200px;
+  overflow: auto;
+}
+
+.cmp-combined {
+  min-height: 80px;
+}
+
+@media (max-width: 760px) {
+  .cmp-row-head { flex-wrap: wrap; }
+  .cmp-flags { width: 60px; }
+  .cmp-count { min-width: auto; }
+}
+
 /* ---------- 8h. 分割模式：分段卡片 ---------- */
 .sp-result {
   display: flex;

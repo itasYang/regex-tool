@@ -205,9 +205,9 @@ App.events = {
 
 ---
 
-## 6. 当前状态（Phase 4 完成时）
+## 6. 当前状态（Phase 5 完成时）
 
-> 进度：Phase 1–4 已完成。下一步是 Phase 5（捕获组 + 批量对比）。顶栏版本号 `v0.4 · Phase 4`。
+> 进度：Phase 1–5 已完成。下一步是 Phase 6（TDD + grep + 解释器）。顶栏版本号 `v0.5 · Phase 5`。
 
 ### 6.1 已实现 ✅
 - 完整 HTML 骨架（顶栏、正则条、10 模式标签、侧边栏、底部状态栏）
@@ -224,11 +224,15 @@ App.events = {
   - `files` 文件名，5 种来源 + 命中/未命中两栏（Phase 3）
   - `replace` 替换，三栏对比 + 全部/逐个（Phase 4）
   - `split` 分割，分段卡片（Phase 4）
+  - `capture` 捕获组分色 + 命名捕获标识 + 全部匹配表格（Phase 5）
+  - `compare` 批量对比 2-4 行（独立标志位）+ 命中数/预览/叠加视图（Phase 5）
+- **引擎扩展（Phase 5）**：`Engine` 序列化匹配时新增 `groupIndices` / `namedIndices`
+  字段，当 RegExp 使用 `d` 标志时携带每个捕获组的 `[start, end]`，供 capture 模式按组分色
 - `data/samples.js` 已填充 6 套示例集
 - Storage 模块完整可用（get/set/remove，含可用性检测）
 
 ### 6.2 未实现（占位状态） ❌
-- 模式 `capture` / `compare`（Phase 5）、`unittest` / `grep` / `explainer`（Phase 6）仍是空 `{ name, phase }` 注册，没有 `mount()`
+- 模式 `unittest` / `grep` / `explainer`（Phase 6）仍是空 `{ name, phase }` 注册，没有 `mount()`
 - Exporter（`export.js`）是空对象（Phase 9）
 - `presets` / `cheatsheet` 仍是空数组（Phase 8）
 - 引擎切换按钮 disabled，没有功能（Phase 7 接 XRegExp）
@@ -247,7 +251,7 @@ App.events = {
 
 ## 7. 各阶段的详细验收标准
 
-> 进度标记：Phase 2 / 3 / 4 已完成 ✅；下一步是 Phase 5。下面的验收清单保留作为各阶段的规格说明与回归参考。
+> 进度标记：Phase 2 / 3 / 4 / 5 已完成 ✅；下一步是 Phase 6。下面的验收清单保留作为各阶段的规格说明与回归参考。
 
 ### Phase 2 — 核心引擎 + 单句测试 ✅（已完成）
 
@@ -339,7 +343,7 @@ window.FileSamples = [
 
 ---
 
-### Phase 5 — 捕获组 + 批量对比 🔥（下一步）
+### Phase 5 — 捕获组 + 批量对比 ✅（已完成）
 
 **Phase 5a · 捕获组：**
 - [ ] 复用单句/多行模式的输入，但渲染更精细：每个捕获组用不同的 `hl-g0`~`hl-g5` 类高亮
@@ -487,7 +491,7 @@ window.FileSamples = [
    - `assets/js/app.js`（已实装的部分，看 IIFE 和事件绑定的风格）
    - `assets/css/style.css`（主题变量怎么定义的）
    - 任意一个 `modes/*.js`（看现有占位结构）
-3. **第三步**：从下一个未完成阶段开始（当前是 **Phase 5**），按本文件 §7 对应阶段的验收清单一条条做
+3. **第三步**：从下一个未完成阶段开始（当前是 **Phase 6**），按本文件 §7 对应阶段的验收清单一条条做
 4. **第四步**：每完成一个 Phase，更新 README 的进度勾选 + 改顶栏版本号 + 让用户测试一轮
 5. **不要跳阶段**。每阶段都是后续阶段的地基。
 

@@ -57,9 +57,15 @@
           length: m[0].length,
           groups: Array.prototype.slice.call(m, 1),
           namedGroups: m.groups ? assign(m.groups) : null,
+          // 'd' 标志开启时，m.indices 给出每段的 [start, end]；序列化为可结构克隆的二维数组
+          groupIndices: m.indices ? sliceIndices(m.indices) : null,
+          namedIndices: (m.indices && m.indices.groups) ? assign(m.indices.groups) : null,
         };
       }
       function assign(g) { var o = {}; for (var k in g) { o[k] = g[k]; } return o; }
+      function sliceIndices(arr) {
+        var out = []; for (var i = 0; i < arr.length; i++) { out.push(arr[i] || null); } return out;
+      }
     };
   }
 
@@ -90,6 +96,8 @@
       length: m[0].length,
       groups: Array.prototype.slice.call(m, 1),
       namedGroups: m.groups ? Object.assign({}, m.groups) : null,
+      groupIndices: m.indices ? Array.prototype.slice.call(m.indices).map(function (p) { return p || null; }) : null,
+      namedIndices: (m.indices && m.indices.groups) ? Object.assign({}, m.indices.groups) : null,
     };
   }
 
