@@ -84,10 +84,10 @@
       'stat.engine': 'Engine: ',
       'stat.dash': '—',
       'stat.ms': ' ms',
-      'stat.hint': 'Ctrl/Cmd + Enter to re-run　Ctrl/Cmd + K to focus regex',
+      'stat.hint': 'Ctrl/Cmd: K focus · Enter re-run · L clear · 1-9/0 switch mode',
 
       'placeholder.willEnable': 'This mode will be enabled in {phase}.',
-      'placeholder.tip': 'Currently Phase 6. All 10 testing modes are now implemented; later phases will add XRegExp, sidebar resources, exports, and final polish.',
+      'placeholder.tip': 'Regex Tester v1.0 — 10 testing modes, dual engine (JS / XRegExp), sidebar resources, multi-language code export, and match detail drawer are all live.',
 
       'common.regexError': 'Invalid regex: {msg}',
       'common.execError': 'Execution error: {msg}',
@@ -473,10 +473,10 @@
       'stat.engine': '引擎：',
       'stat.dash': '—',
       'stat.ms': ' ms',
-      'stat.hint': 'Ctrl/Cmd + Enter 重跑　Ctrl/Cmd + K 聚焦正则',
+      'stat.hint': 'Ctrl/Cmd：K 聚焦 · Enter 重跑 · L 清空 · 1-9/0 切换模式',
 
       'placeholder.willEnable': '该模式将在 {phase} 启用。',
-      'placeholder.tip': '当前为 Phase 6，10 种测试模式均已实装。后续阶段将引入 XRegExp、侧边栏资源、导出、收尾打磨等能力。',
+      'placeholder.tip': '正则测试器 v1.0 — 10 种测试模式、双引擎（JS / XRegExp）、侧边栏资源、多语言代码导出、匹配详情抽屉均已就绪。',
 
       'common.regexError': '正则有误：{msg}',
       'common.execError': '执行出错：{msg}',

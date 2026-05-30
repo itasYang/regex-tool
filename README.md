@@ -1,8 +1,8 @@
 # Regex Tester
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Phase](https://img.shields.io/badge/Phase-9%2F10-blue.svg)](CLAUDE.md)
-[![No Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
+[![Version](https://img.shields.io/badge/version-1.0-blue.svg)](CLAUDE.md)
+[![No Build](https://img.shields.io/badge/build-none-brightgreen.svg)](#)
 
 A pure front-end, zero-build, single-page regex testing tool. Just open `index.html` to use it.
 
@@ -55,6 +55,8 @@ regex-tester/
 
 ## Phased development plan
 
+All phases shipped — project is at **v1.0**.
+
 - [x] **Phase 1** — repo skeleton + theme styles + mode tab placeholders
 - [x] **Phase 2** — core engine (compile + timeout circuit breaker) + Mode 1 (Single)
 - [x] **Phase 3** — Mode 2 (Multiline with line numbers) + Mode 3 (Filenames, 5 sources + hit/miss columns)
@@ -64,7 +66,7 @@ regex-tester/
 - [x] **Phase 7** — XRegExp dual-engine switching
 - [x] **Phase 8** — sidebar (cheatsheet / presets / history)
 - [x] **Phase 9** — export / code generation / match detail panel
-- [ ] **Phase 10** — theme polish and overall finishing
+- [x] **Phase 10** — theme transition, full keyboard shortcuts, focus polish, v1.0
 
 ## Modes
 
@@ -84,6 +86,17 @@ regex-tester/
 ## Language
 
 The UI defaults to English. Click the **中文 / EN** button in the top-right to switch languages; your choice is saved to `localStorage`.
+
+## Keyboard shortcuts
+
+| Shortcut | Action |
+|---|---|
+| `Ctrl/Cmd + K` | Focus the regex input (and select all) |
+| `Ctrl/Cmd + Enter` | Re-compile / re-run the current regex |
+| `Ctrl/Cmd + L` | Clear the regex |
+| `Ctrl/Cmd + 1…9` | Jump to mode 1–9 (Single, Multiline, …, grep) |
+| `Ctrl/Cmd + 0` | Jump to mode 10 (Explainer) |
+| `Esc` | Close the code export dialog or match detail drawer |
 
 ## Continuing development
 

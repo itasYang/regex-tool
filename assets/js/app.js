@@ -68,7 +68,7 @@
       this.recompile();                       // 用恢复/空的正则跑一次初始编译
       this.renderModePanel(this.state.mode);  // 挂载当前模式（默认 single）
       this.renderSidebar();                   // 渲染初始侧边栏
-      console.info('[regex-tester] Phase 9 已就绪');
+      console.info('[regex-tester] v1.0 ready');
     },
 
     /* ---------- 顶栏：导出代码弹层 ---------- */
@@ -420,14 +420,41 @@
     bindShortcuts() {
       document.addEventListener('keydown', (e) => {
         const ctrl = e.ctrlKey || e.metaKey;
-        if (ctrl && (e.key === 'k' || e.key === 'K')) {
+        if (!ctrl) return;
+
+        // Ctrl/Cmd+K : 聚焦正则输入框
+        if (e.key === 'k' || e.key === 'K') {
           e.preventDefault();
           const input = document.getElementById('regex-pattern');
-          if (input && !input.disabled) input.focus();
+          if (input && !input.disabled) { input.focus(); input.select(); }
+          return;
         }
-        if (ctrl && e.key === 'Enter') {
+        // Ctrl/Cmd+Enter : 重新编译 / 重跑
+        if (e.key === 'Enter') {
           e.preventDefault();
-          this.recompile(); // 重跑
+          this.recompile();
+          return;
+        }
+        // Ctrl/Cmd+L : 清空正则
+        if (e.key === 'l' || e.key === 'L') {
+          e.preventDefault();
+          const input = document.getElementById('regex-pattern');
+          if (input) {
+            input.value = '';
+            input.focus();
+            this.recompile();
+          }
+          return;
+        }
+        // Ctrl/Cmd+1..9 / 0 : 切换模式
+        if (e.key >= '0' && e.key <= '9') {
+          const tabs = Array.from(document.querySelectorAll('#mode-tabs .tab'));
+          // 1..9 → 索引 0..8；0 → 索引 9（第 10 个）
+          const idx = (e.key === '0') ? 9 : (parseInt(e.key, 10) - 1);
+          if (tabs[idx]) {
+            e.preventDefault();
+            tabs[idx].click();
+          }
         }
       });
     },

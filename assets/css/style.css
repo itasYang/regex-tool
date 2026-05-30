@@ -102,7 +102,32 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Phase 10: 主题切换时所有有色元素一起平滑过渡 200ms */
+body,
+.topbar, .regex-bar, .mode-tabs, .statusbar,
+.sidebar, .sidebar-content, .sidebar-tabs,
+.tab, .side-tab,
+.regex-input-wrap, .regex-input, .flags-input,
+.flag-btn, .icon-btn,
+.placeholder, .mode-card .field-label,
+.test-input, .result-box,
+.engine-switch, .engine-switch .seg span,
+.fm-sources, .fm-srctabs, .fm-srctab, .fm-srcpanel,
+.fm-col, .fm-col-head, .fm-list, .fm-item,
+.rp-col-head, .rp-box, .sp-seg, .sp-sep,
+.cp-result, .cp-legend, .cp-chip, .cp-table-scroll,
+.cp-table thead th, .cp-table tbody td,
+.cmp-row, .cmp-row-head, .cmp-regex-input, .cmp-preview, .cmp-combined,
+.ut-intro, .ut-progress-bar, .ut-progress-fill, .ut-col, .ut-col-head, .ut-row,
+.gp-opts, .gp-result, .gp-line, .gp-ln, .gp-sep,
+.ex-grid, .ex-col, .ex-col-head, .ex-tokens, .ex-steps,
+.cs-row, .cs-symbol code, .pr-row, .pr-use, .pr-pat,
+.hist-row, .hist-pat, .hist-clear,
+.ex-btn, .ex-dialog, .ex-dialog-head, .ex-tabs, .ex-tab, .ex-code,
+.dr-panel, .dr-head, .dr-row, .dr-match, .dr-pat {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 button {
@@ -121,6 +146,22 @@ input {
   background: transparent;
   border: none;
   outline: none;
+}
+
+/* Phase 10: 键盘焦点可见性（不影响鼠标 hover） */
+button:focus-visible,
+.tab:focus-visible,
+.side-tab:focus-visible,
+.flag-btn:focus-visible,
+.icon-btn:focus-visible,
+.ex-btn:focus-visible,
+.pr-use:focus-visible,
+.hist-use:focus-visible,
+.hist-del:focus-visible,
+.hist-clear:focus-visible,
+.ex-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ---------- 3. 顶部栏 ---------- */
