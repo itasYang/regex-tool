@@ -42,6 +42,7 @@
       '    <label class="field-label">',
       '      ' + esc(t('capture.tableLabel')),
       '      <span class="field-hint" id="cp-table-note"></span>',
+      '      <span class="export-bar" id="cp-export"></span>',
       '    </label>',
       '    <div id="cp-table" class="cp-table-scroll"></div>',
       '  </div>',
@@ -58,8 +59,10 @@
   let tableWrap = null;
   let tableBox = null;
   let tableNote = null;
+  let exportBar = null;
   let onRegexChange = null;
   let timer = null;
+  let lastMatches = [];
 
   function schedule() { clearTimeout(timer); timer = setTimeout(run, 80); }
 
@@ -361,10 +364,44 @@
       }
       renderLegend(groupInfo);
       renderTable(matches, groupInfo);
+      lastMatches = matches;
+      renderExportBar();
+      attachTableClicks();
 
       const n = matches.length;
       if (countEl) countEl.textContent = window.I18n.matches(n);
       App.setStats(n, res.elapsed);
+    });
+  }
+
+  function renderExportBar() {
+    if (!exportBar) return;
+    if (!lastMatches || !lastMatches.length) { exportBar.innerHTML = ''; return; }
+    exportBar.innerHTML =
+      '<button class="ex-btn" data-fmt="csv">' + esc(t('export.csv')) + '</button>' +
+      '<button class="ex-btn" data-fmt="json">' + esc(t('export.json')) + '</button>';
+    exportBar.querySelectorAll('.ex-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!window.Exporter) return;
+        const fmt = btn.dataset.fmt;
+        if (fmt === 'csv') window.Exporter.download('capture.csv', window.Exporter.toCSV(lastMatches), 'text/csv;charset=utf-8');
+        else window.Exporter.download('capture.json', window.Exporter.toJSON(lastMatches), 'application/json');
+      });
+    });
+  }
+
+  function attachTableClicks() {
+    if (!tableBox) return;
+    const rows = tableBox.querySelectorAll('tbody tr');
+    rows.forEach((row, i) => {
+      row.classList.add('cp-row-click');
+      row.addEventListener('click', () => {
+        const m = lastMatches[i];
+        if (m && window.Exporter) {
+          const App = window.App;
+          window.Exporter.openDetail(m, App.state.pattern, App.state.flags);
+        }
+      });
     });
   }
 
@@ -412,6 +449,7 @@
       tableWrap = panel.querySelector('#cp-table-wrap');
       tableBox = panel.querySelector('#cp-table');
       tableNote = panel.querySelector('#cp-table-note');
+      exportBar = panel.querySelector('#cp-export');
 
       if (window.Storage) {
         const saved = Storage.get('capture:text', '');
@@ -433,8 +471,9 @@
       if (onRegexChange) window.App.events.off('regex:change', onRegexChange);
       onRegexChange = null;
       clearTimeout(timer);
+      lastMatches = [];
       panelRef = textarea = resultBox = countEl = null;
-      legendWrap = legendBox = tableWrap = tableBox = tableNote = null;
+      legendWrap = legendBox = tableWrap = tableBox = tableNote = exportBar = null;
     },
   };
 })();

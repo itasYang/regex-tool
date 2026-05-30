@@ -23,6 +23,7 @@
       '    <label class="field-label">',
       '      ' + esc(t('single.resultLabel')),
       '      <span class="field-hint" id="single-count"></span>',
+      '      <span class="export-bar" id="single-export"></span>',
       '    </label>',
       '    <div id="single-result" class="result-box"></div>',
       '  </div>',
@@ -36,8 +37,10 @@
   let textarea = null;
   let resultBox = null;
   let countEl = null;
+  let exportBar = null;
   let onRegexChange = null;
   let timer = null;
+  let lastMatches = [];
 
   function schedule() {
     clearTimeout(timer);
@@ -102,6 +105,40 @@
       const n = res.matches.length;
       setCount(window.I18n.matches(n));
       App.setStats(n, res.elapsed);
+      lastMatches = res.matches;
+      renderExportBar();
+      attachClickDetail();
+    });
+  }
+
+  function renderExportBar() {
+    if (!exportBar) return;
+    if (!lastMatches || !lastMatches.length) { exportBar.innerHTML = ''; return; }
+    exportBar.innerHTML =
+      '<button class="ex-btn" data-fmt="csv">' + esc(t('export.csv')) + '</button>' +
+      '<button class="ex-btn" data-fmt="json">' + esc(t('export.json')) + '</button>';
+    exportBar.querySelectorAll('.ex-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const fmt = btn.dataset.fmt;
+        if (!window.Exporter) return;
+        if (fmt === 'csv') window.Exporter.download('matches.csv', window.Exporter.toCSV(lastMatches), 'text/csv;charset=utf-8');
+        else window.Exporter.download('matches.json', window.Exporter.toJSON(lastMatches), 'application/json');
+      });
+    });
+  }
+
+  function attachClickDetail() {
+    if (!resultBox) return;
+    const marks = resultBox.querySelectorAll('mark.hl');
+    marks.forEach((mk, idx) => {
+      mk.classList.add('hl-click');
+      mk.addEventListener('click', () => {
+        const m = lastMatches[idx];
+        if (m && window.Exporter) {
+          const App = window.App;
+          window.Exporter.openDetail(m, App.state.pattern, App.state.flags);
+        }
+      });
     });
   }
 
@@ -114,6 +151,7 @@
       textarea = panel.querySelector('#single-text');
       resultBox = panel.querySelector('#single-result');
       countEl = panel.querySelector('#single-count');
+      exportBar = panel.querySelector('#single-export');
 
       if (window.Storage) {
         const saved = Storage.get('single:text', '');
@@ -135,7 +173,8 @@
       if (onRegexChange) window.App.events.off('regex:change', onRegexChange);
       onRegexChange = null;
       clearTimeout(timer);
-      textarea = resultBox = countEl = null;
+      lastMatches = [];
+      textarea = resultBox = countEl = exportBar = null;
     },
   };
 })();

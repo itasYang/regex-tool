@@ -60,6 +60,7 @@
       this.bindFlagButtons();
       this.bindLangToggle();
       this.bindEngineSwitch();
+      this.bindExportButton();
       this.bindShortcuts();
       this.applyLang(false);                  // 翻译静态 DOM + 顶栏/状态栏（模式尚未挂载）
       this.syncFlagButtons();
@@ -67,7 +68,17 @@
       this.recompile();                       // 用恢复/空的正则跑一次初始编译
       this.renderModePanel(this.state.mode);  // 挂载当前模式（默认 single）
       this.renderSidebar();                   // 渲染初始侧边栏
-      console.info('[regex-tester] Phase 8 已就绪');
+      console.info('[regex-tester] Phase 9 已就绪');
+    },
+
+    /* ---------- 顶栏：导出代码弹层 ---------- */
+    bindExportButton() {
+      const btn = document.getElementById('export-code');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        if (!this.state.pattern) return;
+        if (window.Exporter) window.Exporter.openCodeDialog(this.state.pattern, this.state.flags || '');
+      });
     },
 
     /* ---------- i18n ---------- */
